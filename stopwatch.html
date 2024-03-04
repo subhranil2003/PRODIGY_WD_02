@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stopwatch</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+  }
+  #stopwatch {
+    font-size: 2em;
+    margin: 20px 0;
+  }
+  #controls button {
+    font-size: 1em;
+    margin: 0 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+<div id="stopwatch">00:00:00</div>
+<div id="controls">
+  <button onclick="startStop()">Start</button>
+  <button onclick="pauseResume()">Pause</button>
+  <button onclick="reset()">Reset</button>
+  <button onclick="recordLap()">Lap</button>
+</div>
+<script>
+  let startTime, currentTime, elapsedTime = 0;
+  let timerInterval;
+  let running = false;
+
+  function startStop() {
+    if (running) {
+      clearInterval(timerInterval);
+      running = false;
+    } else {
+      startTime = Date.now() - elapsedTime;
+      timerInterval = setInterval(updateTime, 10);
+      running = true;
+    }
+  }
+
+  function updateTime() {
+    currentTime = Date.now();
+    elapsedTime = currentTime - startTime;
+    displayTime(elapsedTime);
+  }
+
+  function displayTime(time) {
+    let milliseconds = Math.floor((time % 1000) / 10);
+    let seconds = Math.floor((time / 1000) % 60);
+    let minutes = Math.floor((time / (1000 * 60)) % 60);
+    let hours = Math.floor((time / (1000 * 60 * 60)) % 24);
+
+    milliseconds = milliseconds < 10 ? '0' + milliseconds : milliseconds;
+    seconds = seconds < 10 ? '0' + seconds : seconds;
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    hours = hours < 10 ? '0' + hours : hours;
+
+    document.getElementById('stopwatch').innerText = `${hours}:${minutes}:${seconds}:${milliseconds}`;
+  }
+
+  function pauseResume() {
+    if (running) {
+      clearInterval(timerInterval);
+      running = false;
+    } else {
+      startTime = Date.now() - elapsedTime;
+      timerInterval = setInterval(updateTime, 10);
+      running = true;
+    }
+  }
+
+  function reset() {
+    clearInterval(timerInterval);
+    elapsedTime = 0;
+    displayTime(elapsedTime);
+    running = false;
+  }
+
+  function recordLap() {
+    // Implement lap functionality here if needed
+  }
+</script>
+</body>
+</html>
